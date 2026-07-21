@@ -116,20 +116,42 @@ body.edit .adder{display:flex}
 .empty{text-align:center; color:var(--sub); padding:48px 20px; font-size:13.5px}
 .empty .big{font-size:30px; display:block; margin-bottom:10px; opacity:.55}
 .hint{font-size:11px; color:var(--sub); text-align:center; padding:16px 10px 0; letter-spacing:.04em; line-height:1.8}
+.rebanner{
+  display:none; background:#fff7e6; border:1px solid #f0d79a; border-radius:16px;
+  padding:15px 16px 16px; margin-bottom:15px;
+}
+.rebanner.on{display:block}
+.rebanner .rbt{font-family:"Hiragino Mincho ProN",serif; font-size:14.5px; color:#8a6a2f; margin-bottom:6px; letter-spacing:.05em}
+.rebanner .rbd{font-size:12px; color:#a08a5e; line-height:1.7; margin:0 0 13px}
+.rbbtns{display:flex; gap:9px}
+.rbbtns button{flex:1; padding:12px; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer; letter-spacing:.06em}
+.rbbtns .yes{border:0; background:#d98c7d; color:#fff}
+.rbbtns .no{border:1px solid #e6d3a8; background:#fffdf7; color:#a08a5e}
+
 .backup{
-  display:none; margin-top:26px; background:var(--card); border:1px solid var(--line);
+  margin-top:30px; background:var(--card); border:1px solid var(--line);
   border-radius:16px; padding:15px 16px 16px;
 }
-body.edit .backup{display:block}
 .backup .bt{font-family:"Hiragino Mincho ProN",serif; font-size:13.5px; color:#7a5d54; letter-spacing:.08em; margin-bottom:7px}
 .backup .bd{font-size:11.5px; color:var(--sub); line-height:1.75; margin:0 0 12px}
-.bbtns{display:flex; gap:9px}
-.bbtns button{
-  flex:1; padding:11px; border-radius:11px; font-size:13.5px; font-weight:600; cursor:pointer;
-  border:1px solid #ddc7bc; background:var(--chip); color:#7f6252; letter-spacing:.05em;
+.backup .bd b{color:#8a6f66}
+.bmain{
+  width:100%; padding:12px; border:1px solid #ddc7bc; border-radius:12px; background:var(--chip);
+  color:#7f6252; font-size:14px; font-weight:600; cursor:pointer; letter-spacing:.06em;
 }
+.bsub{
+  width:100%; margin-top:9px; padding:10px; border:1px solid var(--line); border-radius:11px;
+  background:var(--bg); color:#8a6f66; font-size:13px; cursor:pointer; letter-spacing:.05em;
+}
+.qrwrap{display:none; text-align:center; margin-top:14px}
+.qrwrap.on{display:block}
+#qrcode{display:block; background:#fff; padding:10px; border-radius:14px; box-shadow:var(--shadow)}
+#qrcode img, #qrcode canvas{display:block; width:100%; height:auto; image-rendering:pixelated}
+.qrnote{font-size:11.5px; color:var(--sub); line-height:1.7; margin:11px 2px 0}
+.fallback{margin-top:14px}
+.fallback summary{font-size:11.5px; color:var(--sub); cursor:pointer; letter-spacing:.04em}
 .backup textarea{
-  width:100%; margin-top:10px; min-height:64px; font-size:12px; font-family:ui-monospace,Menlo,monospace;
+  width:100%; margin-top:9px; min-height:64px; font-size:12px; font-family:ui-monospace,Menlo,monospace;
   border:1px solid var(--line); border-radius:11px; padding:9px 11px; background:var(--bg); color:var(--ink);
   outline:0; resize:vertical;
 }
@@ -146,11 +168,11 @@ body.edit .dangerwrap{display:block}
   display:flex; align-items:center; gap:12px;
 }
 .bar .cnt{font-size:12.5px; color:var(--sub); letter-spacing:.05em; flex:none}
-.bar .cnt b{font-family:"Hiragino Mincho ProN",serif; font-size:19px; color:#8a6a5a; margin:0 3px}
+.bar .cnt b{font-family:"Hiragino Mincho ProN",serif; font-size:19px; color:#c5705f; margin:0 3px}
 .go{
   flex:1; padding:14px; border:0; border-radius:14px; color:#fff; font-size:15.5px; font-weight:600;
-  background:linear-gradient(145deg,#a0836f,#7f6252); cursor:pointer; letter-spacing:.1em;
-  box-shadow:0 6px 18px rgba(127,98,82,.35);
+  background:#d98c7d; cursor:pointer; letter-spacing:.1em;
+  box-shadow:0 5px 15px rgba(217,140,125,.35);
 }
 .go:disabled{background:#e6d5cd; color:#fff; box-shadow:none; cursor:default}
 
@@ -189,7 +211,7 @@ body.edit .dangerwrap{display:block}
   flex:1; padding:13px; border-radius:13px; font-size:14.5px; font-weight:600; cursor:pointer; letter-spacing:.08em;
 }
 .rbar .back{border:1px solid var(--line); background:var(--card); color:#8a6f66}
-.rbar .clear{border:0; background:linear-gradient(145deg,#a0836f,#7f6252); color:#fff}
+.rbar .clear{border:0; background:#d98c7d; color:#fff}
 .toast{
   position:fixed; left:50%; bottom:96px; transform:translateX(-50%) translateY(10px); z-index:80;
   background:rgba(90,60,50,.92); color:#fff; font-size:13px; padding:10px 18px; border-radius:999px;
@@ -209,6 +231,14 @@ body.edit .dangerwrap{display:block}
 </header>
 
 <main>
+  <div class="rebanner" id="restoreBanner">
+    <div class="rbt">📦 バックアップが見つかりました</div>
+    <p class="rbd" id="restoreInfo"></p>
+    <div class="rbbtns">
+      <button class="yes" id="doRestore">復元する</button>
+      <button class="no" id="cancelRestore">やめる</button>
+    </div>
+  </div>
   <div class="memo" id="memoBox"></div>
   <div class="list" id="list"></div>
   <div class="adder">
@@ -217,13 +247,19 @@ body.edit .dangerwrap{display:block}
   </div>
   <div class="hint" id="hint">買い足すものにチェック → 「買い物リストを作る」</div>
   <div class="backup" id="backup">
-    <div class="bt">❋ バックアップ（機種変更のとき用）</div>
-    <p class="bd">編集した内容はこのスマホの中だけに保存されます。機種変更やアプリの入れ直しでは引き継がれないので、リストを整えたら「書き出す」でコピーして、メモアプリやLINEの自分宛てに貼って残しておいてください。</p>
-    <div class="bbtns">
-      <button id="expBtn">書き出してコピー</button>
-      <button id="impBtn">読み込む</button>
+    <div class="bt">📦 バックアップ・引き継ぎ</div>
+    <p class="bd">機種変更でリストを移すとき。新しいスマホの<b>カメラ</b>で下のQRを写すだけです。</p>
+    <button class="bmain" id="qrBtn">バックアップQRを表示</button>
+    <div class="qrwrap" id="qrWrap">
+      <div id="qrcode"></div>
+      <p class="qrnote">新しいスマホのカメラでこのQRを写す → 出たリンクをタップ → 「復元する」</p>
+      <button class="bsub" id="copyBtn">リンクをコピー</button>
     </div>
-    <textarea id="bkText" placeholder="ここにバックアップの文字列を貼り付けて「読み込む」を押してください"></textarea>
+    <details class="fallback">
+      <summary>QRが読めないとき（コードで復元）</summary>
+      <textarea id="bkText" placeholder="コピーしたリンク／コードを貼り付け"></textarea>
+      <button class="bsub" id="impBtn">このコードで復元</button>
+    </details>
   </div>
   <div class="dangerwrap"><button class="danger" id="resetBtn">最初のリストに戻す</button></div>
 </main>
@@ -252,6 +288,7 @@ body.edit .dangerwrap{display:block}
 
 <div class="toast" id="toast"></div>
 
+<script src="qrcode.min.js"></script>
 <script>
 const DEFAULTS = [
   { key:"shokuzai", name:"食材",
@@ -282,7 +319,7 @@ const COLORS = {
   shokuhin: { c:"#c9a961", cd:"#94762f", cs:"#f6eed9" },  /* 食品 = ハニーゴールド */
   reito:    { c:"#8bacc4", cd:"#5b7f99", cs:"#e4eef5" },  /* 冷凍食品 = パウダーブルー */
   chomiryo: { c:"#ab95bd", cd:"#7c6491", cs:"#efe8f4" },  /* 調味料 = ラベンダー */
-  nichiyo:  { c:"#d98c7d", cd:"#b9604d", cs:"#f7e2da" }   /* 日用品 = ダスティローズ */
+  nichiyo:  { c:"#c0a794", cd:"#8a6d5b", cs:"#f2e9e1" }   /* 日用品 = カフェオレベージュ */
 };
 const FALLBACK = { c:"#d98c7d", cd:"#b9604d", cs:"#f7e2da" };
 const colorOf = t => COLORS[t.key] || FALLBACK;
@@ -311,12 +348,6 @@ function migrate(d){
     i.name = String(i.name).replace("（季節による）", "").trim();
   }));
   return d;
-}
-// 保存データが正しい形かざっくり確認
-function looksValid(d){
-  return Array.isArray(d) && d.length > 0 && d.every(t =>
-    t && typeof t.name === "string" && Array.isArray(t.items) &&
-    t.items.every(i => i && typeof i.name === "string"));
 }
 
 const $ = s => document.querySelector(s);
@@ -455,31 +486,141 @@ function addItem(){
 $("#addBtn").onclick = addItem;
 $("#addInput").addEventListener("keydown", e => { if(e.key === "Enter") addItem() });
 
-// ── バックアップ ──
-$("#expBtn").onclick = async () => {
-  const txt = JSON.stringify(data);
-  $("#bkText").value = txt;
-  try{
-    await navigator.clipboard.writeText(txt);
-    toast("コピーしました。メモに貼って保存してね");
-  }catch(e){
-    $("#bkText").select();
-    toast("下の文字を長押しして全部コピーしてね");
+// ── バックアップ・引き継ぎ（QR） ──
+// QRに収めるため、チェック状態やIDは省いた小さな形にしてから圧縮する
+function toCompact(){
+  return data.map(t => [t.key, t.name, t.memo || "", t.items.map(i => i.name)]);
+}
+function fromCompact(c){
+  return c.map(row => {
+    const [key, name, memo, names] = row;
+    return { key, name, memo: memo || "", items: (names||[]).map(n => ({ id:uid(), name:String(n), on:false })) };
+  });
+}
+function compactValid(c){
+  return Array.isArray(c) && c.length > 0 && c.every(r =>
+    Array.isArray(r) && typeof r[1] === "string" && Array.isArray(r[3]));
+}
+
+const b64url = {
+  enc: bytes => btoa(String.fromCharCode(...bytes)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,""),
+  dec: s => {
+    s = s.replace(/-/g,"+").replace(/_/g,"/");
+    const bin = atob(s + "=".repeat((4 - s.length % 4) % 4));
+    return Uint8Array.from(bin, ch => ch.charCodeAt(0));
   }
 };
 
-$("#impBtn").onclick = () => {
-  const txt = $("#bkText").value.trim();
-  if(!txt){ toast("バックアップの文字列を貼り付けてください"); return }
-  let d;
-  try{ d = JSON.parse(txt) }catch(e){ alert("読み込めませんでした。文字列が途中で切れていないか確認してください。"); return }
-  if(!looksValid(d)){ alert("バックアップの形式が違うようです。"); return }
-  if(!confirm("今のリストを、貼り付けた内容で置きかえます。よろしいですか？")) return;
-  data = migrate(d);
-  data.forEach(t => t.items.forEach(i => { if(typeof i.id !== "string") i.id = uid() }));
+async function makeCode(){
+  const json = JSON.stringify(toCompact());
+  const raw = new TextEncoder().encode(json);
+  if(typeof CompressionStream === "function"){
+    try{
+      const cs = new CompressionStream("deflate-raw");
+      const w = cs.writable.getWriter(); w.write(raw); w.close();
+      const buf = new Uint8Array(await new Response(cs.readable).arrayBuffer());
+      return "z" + b64url.enc(buf);
+    }catch(e){}
+  }
+  return "j" + b64url.enc(raw);
+}
+async function readCode(code){
+  const kind = code[0], body = code.slice(1);
+  const bytes = b64url.dec(body);
+  let json;
+  if(kind === "z"){
+    const ds = new DecompressionStream("deflate-raw");
+    const w = ds.writable.getWriter(); w.write(bytes); w.close();
+    json = await new Response(ds.readable).text();
+  } else if(kind === "j"){
+    json = new TextDecoder().decode(bytes);
+  } else {
+    throw new Error("unknown");
+  }
+  return JSON.parse(json);
+}
+function backupURL(code){ return location.origin + location.pathname + "#d=" + code }
+// リンクでもコードだけでも受け取れるように
+function extractCode(s){
+  s = (s || "").trim();
+  const m = s.match(/[#&?]d=([^&\s]+)/) || s.match(/^d=([^&\s]+)/);
+  return m ? m[1] : s;
+}
+
+let backupUrl = "";
+$("#qrBtn").onclick = async () => {
+  const el = $("#qrcode");
+  el.innerHTML = "";
+  $("#qrWrap").classList.add("on");
+  try{
+    backupUrl = backupURL(await makeCode());
+    if(typeof QRCode === "undefined") throw new Error("lib");
+    // データ量が多いのでQRの目が細かい。読み取りやすいよう大きめに描く
+    new QRCode(el, { text:backupUrl, width:600, height:600, correctLevel:QRCode.CorrectLevel.L });
+  }catch(e){
+    el.innerHTML = '<div style="font-size:12px;color:#c0392b;max-width:220px;line-height:1.7">QRを作れませんでした。下の「リンクをコピー」か「コードで復元」を使ってください。</div>';
+  }
+};
+
+$("#copyBtn").onclick = async () => {
+  if(!backupUrl) return;
+  try{
+    await navigator.clipboard.writeText(backupUrl);
+    toast("リンクをコピーしました");
+  }catch(e){
+    $("#bkText").value = backupUrl;
+    $("#bkText").select();
+    toast("下の欄の文字を長押ししてコピーしてね");
+  }
+};
+
+$("#impBtn").onclick = async () => {
+  const v = $("#bkText").value.trim();
+  if(!v){ toast("リンクかコードを貼り付けてください"); return }
+  let c;
+  try{ c = await readCode(extractCode(v)) }
+  catch(e){ alert("コードを読み取れませんでした。途中で切れていないか確認して、コピーし直してください。"); return }
+  if(!compactValid(c)){ alert("バックアップの形式が違うようです。"); return }
+  if(!confirm("今のリストを、このバックアップの内容で置きかえます。よろしいですか？")) return;
+  applyRestore(c);
+};
+
+function applyRestore(c){
+  data = migrate(fromCompact(c));
   cur = 0; save(); render();
   $("#bkText").value = "";
-  toast("リストを読み込みました");
+  history.replaceState(null, "", location.pathname);
+  toast("リストを復元しました");
+  window.scrollTo(0,0);
+}
+
+// QRから開いたときの復元バナー
+let pending = null;
+async function checkHashRestore(){
+  const m = (location.hash || "").match(/[#&]d=([^&]+)/);
+  if(!m) return;
+  // 復元バナーを確実に見せる（前回のスクロール位置に戻さない）
+  if("scrollRestoration" in history) history.scrollRestoration = "manual";
+  try{
+    const c = await readCode(m[1]);
+    if(!compactValid(c)) return;
+    pending = c;
+    const n = c.reduce((s,r) => s + r[3].length, 0);
+    $("#restoreInfo").textContent =
+      "このデータでリストを復元しますか？（" + c.length + "タブ・" + n + "品）いまの内容は上書きされます。";
+    $("#restoreBanner").classList.add("on");
+    window.scrollTo(0,0);
+  }catch(e){}
+}
+$("#doRestore").onclick = () => {
+  if(pending) applyRestore(pending);
+  pending = null;
+  $("#restoreBanner").classList.remove("on");
+};
+$("#cancelRestore").onclick = () => {
+  pending = null;
+  $("#restoreBanner").classList.remove("on");
+  history.replaceState(null, "", location.pathname);
 };
 
 $("#resetBtn").onclick = () => {
@@ -525,6 +666,7 @@ $("#clearBtn").onclick = () => {
 
 data = load();
 render();
+checkHashRestore();
 </script>
 </body>
 </html>
