@@ -129,9 +129,10 @@ body.edit .adder{display:flex}
 .rbbtns .no{border:1px solid #e6d3a8; background:#fffdf7; color:#a08a5e}
 
 .backup{
-  margin-top:30px; background:var(--card); border:1px solid var(--line);
+  display:none; margin-top:30px; background:var(--card); border:1px solid var(--line);
   border-radius:16px; padding:15px 16px 16px;
 }
+body.edit .backup{display:block}
 .backup .bt{font-family:"Hiragino Mincho ProN",serif; font-size:13.5px; color:#7a5d54; letter-spacing:.08em; margin-bottom:7px}
 .backup .bd{font-size:11.5px; color:var(--sub); line-height:1.75; margin:0 0 12px}
 .backup .bd b{color:#8a6f66}
@@ -610,7 +611,7 @@ async function checkHashRestore(){
       "このデータでリストを復元しますか？（" + c.length + "タブ・" + n + "品）いまの内容は上書きされます。";
     $("#restoreBanner").classList.add("on");
     window.scrollTo(0,0);
-  }catch(e){}
+  }catch(e){ console.error("restore-check", e && e.name, e && e.message) }
 }
 $("#doRestore").onclick = () => {
   if(pending) applyRestore(pending);
