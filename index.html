@@ -116,6 +116,24 @@ body.edit .adder{display:flex}
 .empty{text-align:center; color:var(--sub); padding:48px 20px; font-size:13.5px}
 .empty .big{font-size:30px; display:block; margin-bottom:10px; opacity:.55}
 .hint{font-size:11px; color:var(--sub); text-align:center; padding:16px 10px 0; letter-spacing:.04em; line-height:1.8}
+.backup{
+  display:none; margin-top:26px; background:var(--card); border:1px solid var(--line);
+  border-radius:16px; padding:15px 16px 16px;
+}
+body.edit .backup{display:block}
+.backup .bt{font-family:"Hiragino Mincho ProN",serif; font-size:13.5px; color:#7a5d54; letter-spacing:.08em; margin-bottom:7px}
+.backup .bd{font-size:11.5px; color:var(--sub); line-height:1.75; margin:0 0 12px}
+.bbtns{display:flex; gap:9px}
+.bbtns button{
+  flex:1; padding:11px; border-radius:11px; font-size:13.5px; font-weight:600; cursor:pointer;
+  border:1px solid #ddc7bc; background:var(--chip); color:#7f6252; letter-spacing:.05em;
+}
+.backup textarea{
+  width:100%; margin-top:10px; min-height:64px; font-size:12px; font-family:ui-monospace,Menlo,monospace;
+  border:1px solid var(--line); border-radius:11px; padding:9px 11px; background:var(--bg); color:var(--ink);
+  outline:0; resize:vertical;
+}
+.backup textarea:focus{border-color:#c9ab9d}
 .dangerwrap{display:none; padding:22px 4px 0; text-align:center}
 body.edit .dangerwrap{display:block}
 .danger{font-size:11.5px; color:#b99a91; background:none; border:0; text-decoration:underline; cursor:pointer}
@@ -128,11 +146,11 @@ body.edit .dangerwrap{display:block}
   display:flex; align-items:center; gap:12px;
 }
 .bar .cnt{font-size:12.5px; color:var(--sub); letter-spacing:.05em; flex:none}
-.bar .cnt b{font-family:"Hiragino Mincho ProN",serif; font-size:19px; color:var(--cd); margin:0 3px}
+.bar .cnt b{font-family:"Hiragino Mincho ProN",serif; font-size:19px; color:#8a6a5a; margin:0 3px}
 .go{
   flex:1; padding:14px; border:0; border-radius:14px; color:#fff; font-size:15.5px; font-weight:600;
-  background:var(--c); cursor:pointer; letter-spacing:.1em;
-  box-shadow:0 6px 18px rgba(150,110,95,.35);
+  background:linear-gradient(145deg,#a0836f,#7f6252); cursor:pointer; letter-spacing:.1em;
+  box-shadow:0 6px 18px rgba(127,98,82,.35);
 }
 .go:disabled{background:#e6d5cd; color:#fff; box-shadow:none; cursor:default}
 
@@ -162,7 +180,6 @@ body.edit .dangerwrap{display:block}
 .ritems li .no{
   font-family:"Hiragino Mincho ProN",serif; font-size:11px; flex:none; width:20px; letter-spacing:.05em;
 }
-.ritems li .dot{flex:none; width:7px; height:7px; border-radius:50%; align-self:center}
 .rbar{
   position:fixed; left:0; right:0; bottom:0; z-index:60;
   background:rgba(251,243,238,.93); backdrop-filter:blur(12px); border-top:1px solid var(--line);
@@ -172,7 +189,7 @@ body.edit .dangerwrap{display:block}
   flex:1; padding:13px; border-radius:13px; font-size:14.5px; font-weight:600; cursor:pointer; letter-spacing:.08em;
 }
 .rbar .back{border:1px solid var(--line); background:var(--card); color:#8a6f66}
-.rbar .clear{border:0; background:linear-gradient(145deg,#e29c8d,#c5705f); color:#fff}
+.rbar .clear{border:0; background:linear-gradient(145deg,#a0836f,#7f6252); color:#fff}
 .toast{
   position:fixed; left:50%; bottom:96px; transform:translateX(-50%) translateY(10px); z-index:80;
   background:rgba(90,60,50,.92); color:#fff; font-size:13px; padding:10px 18px; border-radius:999px;
@@ -199,6 +216,15 @@ body.edit .dangerwrap{display:block}
     <button id="addBtn">追加</button>
   </div>
   <div class="hint" id="hint">買い足すものにチェック → 「買い物リストを作る」</div>
+  <div class="backup" id="backup">
+    <div class="bt">❋ バックアップ（機種変更のとき用）</div>
+    <p class="bd">編集した内容はこのスマホの中だけに保存されます。機種変更やアプリの入れ直しでは引き継がれないので、リストを整えたら「書き出す」でコピーして、メモアプリやLINEの自分宛てに貼って残しておいてください。</p>
+    <div class="bbtns">
+      <button id="expBtn">書き出してコピー</button>
+      <button id="impBtn">読み込む</button>
+    </div>
+    <textarea id="bkText" placeholder="ここにバックアップの文字列を貼り付けて「読み込む」を押してください"></textarea>
+  </div>
   <div class="dangerwrap"><button class="danger" id="resetBtn">最初のリストに戻す</button></div>
 </main>
 
@@ -230,7 +256,7 @@ body.edit .dangerwrap{display:block}
 const DEFAULTS = [
   { key:"shokuzai", name:"食材",
     memo:"生鮮は消費期限注意。お肉は月曜〜水曜の買い物で2品まで。",
-    items:["じゃがいも","人参","玉ねぎ","きゅうり","もやし","トマト（季節による）","かぼちゃ（季節による）",
+    items:["じゃがいも","人参","玉ねぎ","きゅうり","もやし","トマト","かぼちゃ",
            "豚こま","合いびき肉","鶏ひき肉","豆腐",
            "卵","牛乳","バター","ピザ用チーズ","ベーコン","ハム","ウインナー","油揚げ"] },
   { key:"shokuhin", name:"食品", memo:"",
@@ -275,9 +301,22 @@ function save(){ localStorage.setItem(KEY, JSON.stringify(data)) }
 function load(){
   try{
     const raw = localStorage.getItem(KEY);
-    if(raw){ const d = JSON.parse(raw); if(Array.isArray(d) && d.length) return d }
+    if(raw){ const d = JSON.parse(raw); if(Array.isArray(d) && d.length) return migrate(d) }
   }catch(e){}
   return freshData();
+}
+// 保存済みデータの手直し
+function migrate(d){
+  d.forEach(t => (t.items || []).forEach(i => {
+    i.name = String(i.name).replace("（季節による）", "").trim();
+  }));
+  return d;
+}
+// 保存データが正しい形かざっくり確認
+function looksValid(d){
+  return Array.isArray(d) && d.length > 0 && d.every(t =>
+    t && typeof t.name === "string" && Array.isArray(t.items) &&
+    t.items.every(i => i && typeof i.name === "string"));
 }
 
 const $ = s => document.querySelector(s);
@@ -416,6 +455,33 @@ function addItem(){
 $("#addBtn").onclick = addItem;
 $("#addInput").addEventListener("keydown", e => { if(e.key === "Enter") addItem() });
 
+// ── バックアップ ──
+$("#expBtn").onclick = async () => {
+  const txt = JSON.stringify(data);
+  $("#bkText").value = txt;
+  try{
+    await navigator.clipboard.writeText(txt);
+    toast("コピーしました。メモに貼って保存してね");
+  }catch(e){
+    $("#bkText").select();
+    toast("下の文字を長押しして全部コピーしてね");
+  }
+};
+
+$("#impBtn").onclick = () => {
+  const txt = $("#bkText").value.trim();
+  if(!txt){ toast("バックアップの文字列を貼り付けてください"); return }
+  let d;
+  try{ d = JSON.parse(txt) }catch(e){ alert("読み込めませんでした。文字列が途中で切れていないか確認してください。"); return }
+  if(!looksValid(d)){ alert("バックアップの形式が違うようです。"); return }
+  if(!confirm("今のリストを、貼り付けた内容で置きかえます。よろしいですか？")) return;
+  data = migrate(d);
+  data.forEach(t => t.items.forEach(i => { if(typeof i.id !== "string") i.id = uid() }));
+  cur = 0; save(); render();
+  $("#bkText").value = "";
+  toast("リストを読み込みました");
+};
+
 $("#resetBtn").onclick = () => {
   if(confirm("リストを最初の状態に戻します。追加・削除した内容は消えますが、よろしいですか？")){
     data = freshData(); cur = 0; save(); render();
@@ -438,7 +504,6 @@ $("#goBtn").onclick = () => {
     const li = document.createElement("li");
     li.innerHTML =
       '<span class="no" style="color:' + p.col.cd + '">' + String(i+1).padStart(2,"0") + '</span>' +
-      '<span class="dot" style="background:' + p.col.c + '"></span>' +
       '<span>' + p.name.replace(/</g,"&lt;") + '</span>';
     ul.appendChild(li);
   });
